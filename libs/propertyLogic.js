@@ -6,7 +6,9 @@
  *   - Look up a property
  */
 
-module.exports = class PropertyLogic {
+"use strict";
+
+class PropertyLogic {
   /**
    * Save a property to the blockchain. It will handle the initial save and the case where you
    * are updating an existing property.
@@ -29,4 +31,19 @@ module.exports = class PropertyLogic {
   getPropertyByCoordinate(coordinate) {
     return undefined;
   }
+
+	/**
+   * Look up a property by the id (address) on the blockchain, returning it.
+   * @param {string} id The property's unique Id, which is the contract address
+   * @returns {Property} The property belong to that id, or undefined if we don't have it.
+   */
+	getPropertyById(id) {
+		return undefined;
+  }
+
+  /**
+   * 
+   */
 };
+
+module.exports = PropertyLogic;
