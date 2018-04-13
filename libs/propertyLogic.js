@@ -8,7 +8,25 @@
 
 "use strict";
 
+const config = require('config');
+const Web3 = require('web3'); 
+
+var blockchainConfig = config.get('Blockchain');
+var web3;
+
 class PropertyLogic {
+  /**
+   * Constructor method runs when the calss is initialized.
+   */
+  constructor() {
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      let url = `${ blockchainConfig.host }:${ blockchainConfig.port }`;
+      web3 = new Web3(new Web3.providers.HttpProvider(url));
+    }
+  }
+
   /**
    * Save a property to the blockchain. It will handle the initial save and the case where you
    * are updating an existing property.
@@ -38,7 +56,7 @@ class PropertyLogic {
    * @returns {Property} The property belong to that id, or undefined if we don't have it.
    */
 	getPropertyById(id) {
-		return undefined;
+	  return undefined;
   }
 
   /**

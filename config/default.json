@@ -1,0 +1,6 @@
+{
+  "Blockchain": {
+    "host": "localhost",
+    "port": 7545
+  }
+}
