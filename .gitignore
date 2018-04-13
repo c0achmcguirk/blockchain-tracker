@@ -1,0 +1,15 @@
+*.bak
+
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/tmp
+node_modules
+
+# Ignore swap files
+*.swp
+*.swo
+*~
+~*
+.project
+.DS_Store
+.sass-cache
