@@ -4,6 +4,7 @@
 /log/*.log
 /tmp
 node_modules
+build
 
 # Ignore swap files
 *.swp
