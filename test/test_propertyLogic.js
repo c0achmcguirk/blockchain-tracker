@@ -6,11 +6,12 @@ describe("PropertyLogic", () => {
     var someVal = "foo";
 		var propertyLogic = new PropertyLogic;
 
-    describe("#getPropertyById", () => {
-      it("should return undefined if the property doesn't exist", () => {
-        let propertyId = "bogus";
-        let returnValue = propertyLogic.getPropertyById(propertyId);
-        assert.strictEqual(undefined, returnValue);
+    describe('#getHelloFromContract', () => {
+      it("should return 'Hello from contract' when talking to the contract", () => {
+        // with mocha/assert, when testing promises you need to return a promise in your test
+        return propertyLogic.getHelloFromTestingContract().then((result) => {
+          assert.strictEqual("Hello from the contract", result);
+        });
       }); 
     });
   });
