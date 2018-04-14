@@ -22,8 +22,6 @@ contract PropertyManager {
 
   // -- Actions --
 
-  // TODO: take offerer/owner from `msg`?
-
   function addProperty(
     int128 top_x,
     int128 top_y,
@@ -82,6 +80,12 @@ contract PropertyManager {
 
     emit OfferRejected(offer_id, o.property_id);
   }
+
+  //function getProperty(
+    //uint256 property_id
+  //) public returns (Property p) {
+    //p = properties[property_id];
+  //}
 
   // -- Events --
 
