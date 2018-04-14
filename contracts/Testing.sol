@@ -18,7 +18,7 @@ contract Testing {
   mapping(string => PropertyOwner) propertyOwners;
 
   function sayHello() public pure returns (string words) {
-    return "Hello from the Contract";
+    return "Hello from the Contract boyee";
   } 
 
   // Constructor
