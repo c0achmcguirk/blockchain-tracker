@@ -1,18 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import MapWithASearchBox from './MapWithASearchBox'
+import InfoCard from './InfoCard'
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      address: '',
+      lat: '',
+      lon: '',
+      diplayInfo: false
+    };
+    this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
+  }
+
+  handleUpdateAddress(hash) {
+    this.setState({ address: hash['address'], lat: hash['lat'], lon: hash['lon'] })
+  }
+
   render() {
+    if(this.state.displayInfo){
+      var displayInfo = <InfoCard />
+    }
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">HomeLnk</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="App-intro">
+          <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
+        </div>
       </div>
     );
   }
