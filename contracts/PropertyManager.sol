@@ -3,10 +3,10 @@ pragma solidity ^0.4.21;
 contract PropertyManager {
   struct Property {
     address owner;
-    int128 top_x;
-    int128 top_y;
-    int128 bottom_x;
-    int128 bottom_y;
+    int128 left_lat;
+    int128 right_lat;
+    int128 top_long;
+    int128 bottom_long;
   }
 
   enum OfferStatus { Open, Withdrawn, Rejected, Accepted }
@@ -23,20 +23,20 @@ contract PropertyManager {
   // -- Actions --
 
   function addProperty(
-    int128 top_x,
-    int128 top_y,
-    int128 bottom_x,
-    int128 bottom_y
+    int128 left_lat,
+    int128 right_lat,
+    int128 top_long,
+    int128 bottom_long
   ) public returns (uint256 _property_id) {
     _property_id = properties.length++;
     Property storage p = properties[_property_id];
     p.owner = msg.sender;
-    p.top_x = top_x;
-    p.top_y = top_y;
-    p.bottom_x = bottom_x;
-    p.bottom_y = bottom_y;
+    p.left_lat = left_lat;
+    p.right_lat = right_lat;
+    p.top_long = top_long;
+    p.bottom_long = bottom_long;
 
-    emit PropertyAdded(_property_id, p.owner, p.top_x, p.top_y, p.bottom_x, p.bottom_y);
+    emit PropertyAdded(_property_id, p.owner, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
   }
 
   function makeOffer(
@@ -148,10 +148,10 @@ contract PropertyManager {
   event PropertyAdded(
     uint256 indexed property_id,
     address owner,
-    int128 top_x,
-    int128 top_y,
-    int128 bottom_x,
-    int128 bottom_y
+    int128 left_lat,
+    int128 right_lat,
+    int128 top_long,
+    int128 bottom_long
   );
 
   event OfferMade(
