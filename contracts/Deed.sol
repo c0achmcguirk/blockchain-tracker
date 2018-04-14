@@ -25,7 +25,6 @@ contract PropertyManager {
   // TODO: take offerer/owner from `msg`?
 
   function addProperty(
-    address owner,
     int128 top_x,
     int128 top_y,
     int128 bottom_x,
@@ -33,27 +32,26 @@ contract PropertyManager {
   ) public returns (uint256 _property_id) {
     _property_id = properties.length++;
     Property storage p = properties[_property_id];
-    p.owner = owner;
+    p.owner = msg.sender;
     p.top_x = top_x;
     p.top_y = top_y;
     p.bottom_x = bottom_x;
     p.bottom_y = bottom_y;
 
-    emit PropertyAdded(_property_id, owner, top_x, top_y, bottom_x, bottom_y);
+    emit PropertyAdded(_property_id, p.owner, p.top_x, p.top_y, p.bottom_x, p.bottom_y);
   }
 
   function makeOffer(
-    address offerer,
     uint256 property_id
   ) public returns (uint256 _offer_id) {
     // TODO: require valid property
     _offer_id = offers.length++;
     Offer storage o = offers[_offer_id];
-    o.offerer = offerer;
+    o.offerer = msg.sender;
     o.property_id = property_id;
     o.status = OfferStatus.Open;
 
-    emit OfferMade(_offer_id, offerer, property_id);
+    emit OfferMade(_offer_id, o.offerer, o.property_id);
   }
 
   function acceptOffer(
