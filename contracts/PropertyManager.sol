@@ -93,6 +93,22 @@ contract PropertyManager {
     emit OfferRejected(offer_id, o.property_id);
   }
 
+  function getProperty(
+    uint256 _property_id
+  ) public view returns (
+    uint256 property_id,
+    int128 left_lat,
+    int128 right_lat,
+    int128 top_long,
+    int128 bottom_long
+  ) {
+    requireProperty(_property_id);
+
+    Property storage p = properties[_property_id];
+
+    return (_property_id, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+  }
+
   function getPropertyAt(
     int128 lat,
     int128 long
@@ -107,13 +123,8 @@ contract PropertyManager {
       Property storage p = properties[i];
 
       if (left_lat < lat && lat < right_lat && bottom_long < long && long < top_long) {
-        property_id = i;
-        left_lat = p.left_lat;
-        right_lat = p.right_lat;
-        top_long = p.top_long;
-        bottom_long = p.bottom_long;
 
-        return;
+        return (i, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
       }
     }
   }
