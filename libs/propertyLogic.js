@@ -16,18 +16,44 @@ var blockchainConfig = config.get('Blockchain');
 var contractBin      = config.get('TestContract.bin');
 var contractAbi      = config.get('TestContract.abi');
 var fromAddress      = config.get('fromAddress');
+var fixnumFactor     = config.get('fixnumFactor');
 
 class PropertyLogic {
+
   /**
    * Constructor method runs when the calss is initialized.
    */
   constructor() {
+    this._contractInstance = undefined;
+
     if (typeof web3 !== 'undefined') {
       web3 = new Web3(web3.currentProvider);
     } else {
       let url = `http://${ blockchainConfig.host }:${ blockchainConfig.port }`;
       web3 = new Web3(new Web3.providers.HttpProvider(url));
     }
+  }
+
+  /**
+   * @returns {Promise<ContractInstance>} the contract needed by this class.
+  */
+  getContractInstance() {
+    return new Promise((resolve, reject) => {
+      if(this._contractInstance) {
+        resolve(this._contractInstance);
+      } else {
+        let contract = new web3.eth.Contract(contractAbi);
+        contract.deploy({data: contractBin})
+        .send({
+          from     : fromAddress,
+          gas      : 1500000,
+          gasPrice : '30000000000000'
+        }).then((instance) => {
+          this._contractInstance = instance;
+          resolve(instance);
+        });
+      }
+    });
   }
 
   /**
@@ -39,7 +65,7 @@ class PropertyLogic {
    * @param {string} name The name of the property for displaying on a UI.
    * @returns {Property} The updated property.
    */
-  save(id, coordinates, name) {
+  saveProperty(id, coordinates, name) {
     //no-op
   }
 
@@ -49,8 +75,17 @@ class PropertyLogic {
    * @returns {Property} The property belonging to that coordinate, or undefined if we don't have
    *   a property belonging to that point.
    */
-  getPropertyByCoordinate(coordinate) {
-    return undefined;
+  getPropertyByCoordinate(latitude, longitude) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then((newContractInstance) => {
+        newContractInstance.methods.getPropertyAt(latitude, longitude).call({from: fromAddress, gas: 500000}).then((result) => {
+          resolve(result);
+        });
+      });
+    });
+
+    return promise;
   }
 
 	/**
@@ -60,7 +95,12 @@ class PropertyLogic {
    */
 	getPropertyById(id) {
     let promise = new Promise((resolve, reject) => {
-      resolve(`PropertyId ${id}`);
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.methods.getPropertyById(id).call({from: fromAddress, gas: 5000000}).then((result) => {
+          resolve(result);
+        });
+      });
     });
 
     return promise;
@@ -72,13 +112,7 @@ class PropertyLogic {
    */
   getHelloFromTestingContract() {
     let promise = new Promise((resolve, reject) => {
-      let contract = new web3.eth.Contract(contractAbi);
-      contract.deploy({data: contractBin})
-      .send({
-        from     : fromAddress,
-        gas      : 1500000,
-        gasPrice : '30000000000000'
-      })
+      this.getContractInstance()
       .then(function(newContractInstance) {
         newContractInstance.methods.sayHello().call({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
@@ -96,13 +130,7 @@ class PropertyLogic {
   */
   addToCountFromTestingContract() {
     let promise = new Promise((resolve, reject) => {
-      let contract = new web3.eth.Contract(contractAbi);
-      contract.deploy({data: contractBin})
-      .send({
-        from      : fromAddress,
-        gas       : 1500000,
-        gasPrice  : '30000000000000'
-      })
+      this.getContractInstance()
       .then(function(newContractInstance) {
         newContractInstance.methods.addToCount().send({from: fromAddress}).then((result) => {
           newContractInstance.methods.getCount().call({from: fromAddress, gas: 500000}).then((result) => {
