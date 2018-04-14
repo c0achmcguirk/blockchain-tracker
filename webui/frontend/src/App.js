@@ -4,9 +4,16 @@ import MapWithASearchBox from './MapWithASearchBox';
 import InfoCard from './InfoCard';
 
 class App extends Component {
-  state = {
-    response: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      address: '',
+      lat: '',
+      lon: '',
+      placeId: ''
+    };
+    this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
+  }
 
   componentDidMount() {
     this.callApi()
@@ -24,24 +31,19 @@ class App extends Component {
     return body;
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      address: '',
-      lat: '',
-      lon: '',
-      diplayInfo: false
-    };
-    this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
-  }
-
   handleUpdateAddress(hash) {
-    this.setState({ address: hash['address'], lat: hash['lat'], lon: hash['lon'] })
+    this.setState({
+      address: hash['address'],
+      lat: hash['lat'],
+      lon: hash['lon'],
+      placeId: hash['placeId'],
+      zoom: 25
+    })
   }
 
   render() {
-    if(this.state.displayInfo){
-      var displayInfo = <InfoCard />
+    if(this.state.address !== ''){
+      var displayInfo = <InfoCard address={this.state.address} />
     }
     return (
       <div className="App">
@@ -52,6 +54,7 @@ class App extends Component {
         </div>
         <div className="App-intro">
           <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
+          {displayInfo}
         </div>
       </div>
     );

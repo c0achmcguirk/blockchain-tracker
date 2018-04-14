@@ -9,7 +9,7 @@ const MapWithASearchBox = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `500px` }} />,
+    containerElement: <div style={{ height: `360px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   lifecycle({
@@ -32,6 +32,7 @@ const MapWithASearchBox = compose(
         onSearchBoxMounted: ref => {
           refs.searchBox = ref;
         },
+
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
           const bounds = new google.maps.LatLngBounds();
@@ -39,7 +40,8 @@ const MapWithASearchBox = compose(
           this.props.onUpdatePlace({
             lat: this.state.center.lat(),
             lon: this.state.center.lng(),
-            address: places[0]["formatted_address"]
+            address: places[0]["formatted_address"],
+            placeId: places[0]["place_id"]
           })
 
           places.forEach(place => {
@@ -56,7 +58,6 @@ const MapWithASearchBox = compose(
             center: nextCenter,
             markers: nextMarkers,
           });
-          // refs.map.fitBounds(bounds);
         },
       })
     },
@@ -66,9 +67,10 @@ const MapWithASearchBox = compose(
 )(props =>
   <GoogleMap
     ref={props.onMapMounted}
-    defaultZoom={17}
+    defaultZoom={19}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
+    onClick={props.onClick}
   >
     <SearchBox
       ref={props.onSearchBoxMounted}
@@ -78,7 +80,7 @@ const MapWithASearchBox = compose(
     >
       <input
         type="text"
-        placeholder="Customized your placeholder"
+        placeholder="Search for a property..."
         style={{
           boxSizing: `border-box`,
           border: `1px solid transparent`,
