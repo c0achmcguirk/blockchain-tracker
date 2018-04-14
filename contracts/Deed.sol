@@ -9,7 +9,7 @@ contract PropertyManager {
     int128 bottom_y;
   }
 
-  enum OfferStatus { Open, Rejected, Accepted }
+  enum OfferStatus { Open, Withdrawn, Rejected, Accepted }
 
   struct Offer {
     address offerer;
@@ -53,10 +53,21 @@ contract PropertyManager {
     emit OfferMade(_offer_id, o.offerer, o.property_id);
   }
 
+  function withdrawOffer(
+    uint256 offer_id
+  ) public {
+    requireOpen(offer_id);
+    Offer storage o = offers[offer_id];
+
+    o.status = OfferStatus.Withdrawn;
+
+    emit OfferWithdrawn(offer_id, o.property_id);
+  }
+
   function acceptOffer(
     uint256 offer_id
   ) public {
-    requireOffer(offer_id);
+    requireOpen(offer_id);
     Offer storage o = offers[offer_id];
 
     requireOwner(o.property_id);
@@ -71,7 +82,7 @@ contract PropertyManager {
   function rejectOffer(
     uint256 offer_id
   ) public {
-    requireOffer(offer_id);
+    requireOpen(offer_id);
     Offer storage o = offers[offer_id];
 
     requireOwner(o.property_id);
@@ -112,6 +123,26 @@ contract PropertyManager {
     require(p.owner == msg.sender);
   }
 
+  function requireOfferer(
+    uint256 offer_id
+  ) internal view {
+    requireOffer(offer_id);
+
+    Offer storage o = offers[offer_id];
+
+    require(o.offerer == msg.sender);
+  }
+
+  function requireOpen(
+    uint256 offer_id
+  ) internal view {
+    requireOffer(offer_id);
+
+    Offer storage o = offers[offer_id];
+
+    require(o.status == OfferStatus.Open);
+  }
+
   // -- Events --
 
   event PropertyAdded(
@@ -130,6 +161,11 @@ contract PropertyManager {
   );
 
   event OfferAccepted(
+    uint256 indexed offer_id,
+    uint256 indexed property_id
+  );
+
+  event OfferWithdrawn(
     uint256 indexed offer_id,
     uint256 indexed property_id
   );
