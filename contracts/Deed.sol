@@ -52,6 +52,20 @@ contract PropertyManager {
     emit OfferMade(_offer_id, offerer, property_id);
   }
 
+  function acceptOffer(
+    uint256 offer_id
+  ) public {
+    // TODO: require valid property
+    // TODO: require valid offer
+    // TODO: require property owner
+    Offer storage o = offers[offer_id];
+    Property storage p = properties[o.property_id];
+
+    p.owner = o.offerer;
+
+    emit OfferAccepted(offer_id, o.property_id);
+  }
+
   // -- Events --
 
   event PropertyAdded(
@@ -66,6 +80,11 @@ contract PropertyManager {
   event OfferMade(
     uint256 indexed offer_id,
     address offerer,
+    uint256 indexed property_id
+  );
+
+  event OfferAccepted(
+    uint256 indexed offer_id,
     uint256 indexed property_id
   );
 }
