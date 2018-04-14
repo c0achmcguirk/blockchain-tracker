@@ -9,7 +9,7 @@
 "use strict";
 
 const config = require('config');
-const Web3 = require('web3'); 
+const Web3 = require('web3');
 var web3;
 
 var blockchainConfig = config.get('Blockchain');
@@ -83,6 +83,33 @@ class PropertyLogic {
         newContractInstance.methods.sayHello().call({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
         });
+      });
+    });
+
+    return promise;
+  }
+
+  /**
+   * Tests that we can update the state of the contract's count variable
+   * and can fetch the update count.
+   * @returns {Promise<string>} The string returned represents the uint count.
+  */
+  addToCountFromTestingContract() {
+    let promise = new Promise((resolve, reject) => {
+      let contract = new web3.eth.Contract(contractAbi);
+      contract.deploy({data: contractBin})
+      .send({
+        from      : fromAddress,
+        gas       : 1500000,
+        gasPrice  : '30000000000000'
+      })
+      .then(function(newContractInstance) {
+        newContractInstance.methods.addToCount().send({from: fromAddress}).then((result) => {
+          newContractInstance.methods.getCount().call({from: fromAddress, gas: 500000}).then((result) => {
+            resolve(result);
+          });
+        })
+
       });
     });
 

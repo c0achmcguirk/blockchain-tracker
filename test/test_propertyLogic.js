@@ -12,7 +12,15 @@ describe("PropertyLogic", () => {
         return propertyLogic.getHelloFromTestingContract().then((result) => {
           assert.strictEqual("Hello from the Contract boyee", result);
         });
-      }); 
+      });
+    });
+
+    describe('#addToCountFromTestingContract', () => {
+      it("should return 1 when adding to the count", () => {
+        return propertyLogic.addToCountFromTestingContract().then((result) => {
+          assert.strictEqual('1', result);
+        });
+      });
     });
   });
 });

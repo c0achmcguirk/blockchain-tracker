@@ -3,6 +3,7 @@ pragma solidity ^0.4.17;
 contract Testing {
   address public owner;
   uint public last_completed_migration;
+  uint public count;
 
   struct Property {
     address id;
@@ -19,7 +20,7 @@ contract Testing {
 
   function sayHello() public pure returns (string words) {
     return "Hello from the Contract boyee";
-  } 
+  }
 
   // Constructor
   function Testing() public {
@@ -28,6 +29,14 @@ contract Testing {
 
   modifier restricted() {
     if (msg.sender == owner) _;
+  }
+
+  function addToCount() public {
+    count = count + 1;
+  }
+
+  function getCount() public constant returns(uint) {
+    return count;
   }
 
   // function setCompleted(uint completed) public restricted {
