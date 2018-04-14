@@ -60,7 +60,7 @@ class PropertyLogic {
    */
 	getPropertyById(id) {
     let promise = new Promise((resolve, reject) => {
-      resolve(undefined);
+      resolve(`PropertyId ${id}`);
     });
 
     return promise;

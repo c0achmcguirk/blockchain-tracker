@@ -16,7 +16,7 @@ class App extends Component {
 
   callApi = async () => {
     // this code is in backend.js
-    const response = await fetch('/api/hello');
+    const response = await fetch('/api/properties/bogusProperty');
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
