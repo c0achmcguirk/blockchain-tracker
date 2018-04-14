@@ -41,6 +41,10 @@ pragma solidity ^0.4.21;
 contract PropertyManager {
   struct Property {
     address owner;
+    int128 top_x;
+    int128 top_y;
+    int128 bottom_x;
+    int128 bottom_y;
   }
 
   Property[] public properties;
@@ -51,6 +55,13 @@ contract PropertyManager {
     int128 top_y,
     int128 bottom_x,
     int128 bottom_y
-  ) returns (uint64 _property_id) {
+  ) public returns (uint256 _property_id) {
+    _property_id = properties.length++;
+    Property storage p = properties[_property_id];
+    p.owner = owner;
+    p.top_x = top_x;
+    p.top_y = top_y;
+    p.bottom_x = bottom_x;
+    p.bottom_y = bottom_y;
   }
 }
