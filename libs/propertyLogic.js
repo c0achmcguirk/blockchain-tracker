@@ -18,10 +18,13 @@ var contractAbi      = config.get('TestContract.abi');
 var fromAddress      = config.get('fromAddress');
 
 class PropertyLogic {
+
   /**
    * Constructor method runs when the calss is initialized.
    */
   constructor() {
+    this._contractInstance = undefined;
+
     if (typeof web3 !== 'undefined') {
       web3 = new Web3(web3.currentProvider);
     } else {
@@ -59,11 +62,31 @@ class PropertyLogic {
    * @returns {Promise<Property>} The property belong to that id, or undefined if we don't have it.
    */
 	getPropertyById(id) {
-    let promise = new Promise((resolve, reject) => {
-      resolve(undefined);
-    });
+    // return testingContractInstance.methods.getPropertyById(id).call({from: fromAddress, gas: 5000000}).then((result) => {
+    //   resolve(result);
+    // });
+  }
 
-    return promise;
+  /**
+   * @returns {Promise<ContractInstance>} the contract needed by this class.
+  */
+  getContractInstance() {
+    return new Promise((resolve, reject) => {
+      if(this._contractInstance) {
+        resolve(this._contractInstance);
+      } else {
+        let contract = new web3.eth.Contract(contractAbi);
+        contract.deploy({data: contractBin})
+        .send({
+          from     : fromAddress,
+          gas      : 1500000,
+          gasPrice : '30000000000000'
+        }).then((instance) => {
+          this._contractInstance = instance;
+          resolve(instance);
+        });
+      }
+    });
   }
 
   /**
@@ -72,13 +95,7 @@ class PropertyLogic {
    */
   getHelloFromTestingContract() {
     let promise = new Promise((resolve, reject) => {
-      let contract = new web3.eth.Contract(contractAbi);
-      contract.deploy({data: contractBin})
-      .send({
-        from     : fromAddress,
-        gas      : 1500000,
-        gasPrice : '30000000000000'
-      })
+      this.getContractInstance()
       .then(function(newContractInstance) {
         newContractInstance.methods.sayHello().call({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
@@ -96,13 +113,7 @@ class PropertyLogic {
   */
   addToCountFromTestingContract() {
     let promise = new Promise((resolve, reject) => {
-      let contract = new web3.eth.Contract(contractAbi);
-      contract.deploy({data: contractBin})
-      .send({
-        from      : fromAddress,
-        gas       : 1500000,
-        gasPrice  : '30000000000000'
-      })
+      this.getContractInstance()
       .then(function(newContractInstance) {
         newContractInstance.methods.addToCount().send({from: fromAddress}).then((result) => {
           newContractInstance.methods.getCount().call({from: fromAddress, gas: 500000}).then((result) => {
