@@ -4,14 +4,11 @@ import MapWithASearchBox from './MapWithASearchBox';
 import InfoCard from './InfoCard';
 
 class App extends Component {
-  state = {
-    response: ''
-  };
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+    // this.callApi()
+    //   .then(res => this.setState({ response: res.express }))
+    //   .catch(err => console.log(err));
   }
 
   callApi = async () => {
@@ -24,19 +21,35 @@ class App extends Component {
     return body;
   };
 
+  getPropertyByLatLong = async (lat, lon) => {
+    const response = await fetch(`/api/properties?lat=${lat}&lon=${lon}`);
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       address: '',
       lat: '',
       lon: '',
+      name: '',
       diplayInfo: false
     };
     this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
   }
 
   handleUpdateAddress(hash) {
-    this.setState({ address: hash['address'], lat: hash['lat'], lon: hash['lon'] })
+    //this.setState({ address: hash['address'], lat: hash['lat'], lon: hash['lon'] })
+    this.getPropertyByLatLong(hash.lat, hash.lon).then(res => {
+      this.setState({
+        lat: res.property.latitude,
+        lon: res.property.longitude,
+        name: res.property.name,
+        address: hash.address
+      }); 
+    });
   }
 
   render() {
@@ -52,6 +65,13 @@ class App extends Component {
         </div>
         <div className="App-intro">
           <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
+        </div>
+        <div className="propertyInfo">
+          <p>
+            <b>{this.state.name}</b><br/>
+            {this.state.address}<br/>
+            {this.state.lat},{this.state.lon}
+          </p> 
         </div>
       </div>
     );

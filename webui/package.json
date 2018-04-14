@@ -7,6 +7,7 @@
     "concurrently": "^3.5"
   },
   "scripts": {
+    "fixconfig": "cp -f ../config/*.json config/",
     "start": "concurrently --kill-others-on-fail \"yarn backend\" \"yarn frontend\"",
     "build": "cd frontend && react-scripts build",
     "test": "cd frontend && react-scripts test --env=jsdom",

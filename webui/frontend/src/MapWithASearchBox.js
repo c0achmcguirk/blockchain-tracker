@@ -40,7 +40,7 @@ const MapWithASearchBox = compose(
             lat: this.state.center.lat(),
             lon: this.state.center.lng(),
             address: places[0]["formatted_address"]
-          })
+          });
 
           places.forEach(place => {
             if (place.geometry.viewport) {

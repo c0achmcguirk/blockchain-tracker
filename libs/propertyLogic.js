@@ -10,6 +10,7 @@
 
 const config = require('config');
 const Web3 = require('web3');
+const Property = require('./property');
 var web3;
 
 var blockchainConfig = config.get('Blockchain');
@@ -68,6 +69,22 @@ class PropertyLogic {
   saveProperty(id, coordinates, name) {
     //no-op
   }
+
+  /**
+   * Returns test information
+   * @param {Coordinate} coordinate The GPS coordinates of a point on the map.
+   * @returns {Property} A test property for use in testing the UI
+   */
+  getDummyPropertyByCoordinate(latitude, longitude) {
+    let promise = new Promise((resolve, reject) => {
+      let property = new Property({latitude: latitude, longitude: longitude, 
+        name: `Property at ${ latitude }, ${longitude}`});
+      resolve(property);
+    });
+
+    return promise;
+  }
+
 
   /**
    * Look up a property on the blockchain based on GPS coordinates (one point)
