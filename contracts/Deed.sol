@@ -42,7 +42,8 @@ contract PropertyManager {
   function makeOffer(
     uint256 property_id
   ) public returns (uint256 _offer_id) {
-    // TODO: require valid property
+    requireProperty(property_id);
+
     _offer_id = offers.length++;
     Offer storage o = offers[_offer_id];
     o.offerer = msg.sender;
@@ -55,10 +56,10 @@ contract PropertyManager {
   function acceptOffer(
     uint256 offer_id
   ) public {
-    // TODO: require valid property
-    // TODO: require valid offer
-    // TODO: require property owner
+    requireOffer(offer_id);
     Offer storage o = offers[offer_id];
+
+    requireOwner(o.property_id);
     Property storage p = properties[o.property_id];
 
     p.owner = o.offerer;
@@ -70,10 +71,10 @@ contract PropertyManager {
   function rejectOffer(
     uint256 offer_id
   ) public {
-    // TODO: require valid property
-    // TODO: require valid offer
-    // TODO: require property owner
+    requireOffer(offer_id);
     Offer storage o = offers[offer_id];
+
+    requireOwner(o.property_id);
     //Property storage p = properties[o.property_id];
 
     o.status = OfferStatus.Rejected;
@@ -86,6 +87,30 @@ contract PropertyManager {
   //) public returns (Property p) {
     //p = properties[property_id];
   //}
+
+  // -- Requirements --
+
+  function requireProperty(
+    uint256 property_id
+  ) internal view {
+    require(property_id <= properties.length);
+  }
+
+  function requireOffer(
+    uint256 offer_id
+  ) internal view {
+    require(offer_id <= offers.length);
+  }
+
+  function requireOwner(
+    uint256 property_id
+  ) internal view {
+    requireProperty(property_id);
+
+    Property storage p = properties[property_id];
+
+    require(p.owner == msg.sender);
+  }
 
   // -- Events --
 
