@@ -9,9 +9,12 @@ contract PropertyManager {
     int128 bottom_y;
   }
 
+  enum OfferStatus { Open, Rejected, Accepted }
+
   struct Offer {
     address offerer;
     uint256 property_id;
+    OfferStatus status;
   }
 
   Property[] public properties;
@@ -48,6 +51,7 @@ contract PropertyManager {
     Offer storage o = offers[_offer_id];
     o.offerer = offerer;
     o.property_id = property_id;
+    o.status = OfferStatus.Open;
 
     emit OfferMade(_offer_id, offerer, property_id);
   }
@@ -62,8 +66,23 @@ contract PropertyManager {
     Property storage p = properties[o.property_id];
 
     p.owner = o.offerer;
+    o.status = OfferStatus.Accepted;
 
     emit OfferAccepted(offer_id, o.property_id);
+  }
+
+  function rejectOffer(
+    uint256 offer_id
+  ) public {
+    // TODO: require valid property
+    // TODO: require valid offer
+    // TODO: require property owner
+    Offer storage o = offers[offer_id];
+    //Property storage p = properties[o.property_id];
+
+    o.status = OfferStatus.Rejected;
+
+    emit OfferRejected(offer_id, o.property_id);
   }
 
   // -- Events --
@@ -84,6 +103,11 @@ contract PropertyManager {
   );
 
   event OfferAccepted(
+    uint256 indexed offer_id,
+    uint256 indexed property_id
+  );
+
+  event OfferRejected(
     uint256 indexed offer_id,
     uint256 indexed property_id
   );
