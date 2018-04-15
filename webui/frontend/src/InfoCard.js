@@ -7,10 +7,17 @@ class InfoCard extends Component {
     this.state = {
       renderForm: false,
       transferTo: '',
-      buttonState: 'enabled'
+      buttonState: 'enabled',
+      saved: false
     };
     this.submitPassOwnership = this.submitPassOwnership.bind(this);
     this.handleTransferTo = this.handleTransferTo.bind(this);
+    this.handleUpdateSave = this.handleUpdateSave.bind(this);
+  }
+
+  handleUpdateSave(event){
+    event.preventDefault()
+    this.setState({ saved: !this.state.saved })
   }
 
   handleSubmit(event) {
@@ -45,6 +52,7 @@ class InfoCard extends Component {
           <input type="submit" value="Submit" onClick={(e) => this.handleSubmit(e)}/>
         </form>
     }
+
     var historyOrOffer;
     var header;
     var dollar = this.props.offer.price !== '' ? '$' : '';
@@ -70,15 +78,31 @@ class InfoCard extends Component {
     }
 
     var button;
+    var renderAction;
     if(this.props.view === 'customer') {
-      button = (<span></span>);
+      if(this.state.saved){
+        renderAction = <a href="#" onClick={this.handleUpdateSave}>You already saved this home!</a>
+      }else{
+        renderAction = <a href="#" onClick={this.handleUpdateSave}>Save This Home</a>
+      }
     } else {
       if(this.state.buttonState === 'enabled') {
-        button = (<a href="#" onClick={this.submitPassOwnership} style={buttonStyle}>Transfer Ownership</a>);
+        renderAction = (<a href="#" onClick={this.submitPassOwnership} style={buttonStyle}>Transfer Ownership</a>);
       } else {
-        button = (<a href="#" onClick={this.submitPassOwnership} style={buttonStyle} disabled>Transfer Ownership</a>);
+        renderAction = (<a href="#" onClick={this.submitPassOwnership} style={buttonStyle} disabled>Transfer Ownership</a>);
       }
     }
+
+    // if(this.props.view === 'customer'){
+    //   if(this.state.saved){
+    //     var renderAction = <a href="#" onClick={this.handleUpdateSave}>You already saved this home!</a>
+    //   }else{
+    //     var renderAction = <a href="#" onClick={this.handleUpdateSave}>Save This Home</a>
+    //   }
+    // }else{
+    //   var renderAction = <a href="#" onClick={this.handleChangeRenderForm}>Pass Ownership</a>
+    // }
+
 
     return (
       <div className="blog-card">
@@ -94,7 +118,7 @@ class InfoCard extends Component {
           </div>
           <br/>
           {form}
-            {button}
+          {renderAction}
       	</div>
       </div>
     )

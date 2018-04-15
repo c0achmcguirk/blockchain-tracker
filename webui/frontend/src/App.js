@@ -126,34 +126,12 @@ class App extends Component {
     }
 
     if(this.state.view === 'customer'){
-      const renderView =
-        <div className="wrapper">
-          <div className="nav">
-            <div className="topnav">
-              <a className="active" href="#home">HomeLnk</a>
-            </div>
-          </div>
-          <div className="one">
-            <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
-          </div>
-          <div className="two">
-            {displayInfo}
-          </div>
-        </div>
-    }else{
-      const renderView =
-      <h1>Customer View</h1>
-
-    }
-    console.log(this.state.view)
-    if(this.state.view === 'customer'){
       var mapLayout = 'three'
       var infoLayout = 'four'
     } else {
       var mapLayout = 'one'
       var infoLayout = 'two'
     }
-
 
     return (
       <div className="wrapper">

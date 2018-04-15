@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "express": "^4.16.2",
-    "concurrently": "^3.5"
+    "concurrently": "^3.5",
+    "express": "^4.16.2"
   },
   "scripts": {
     "fixconfig": "cp -f ../config/*.json config/",
@@ -15,5 +15,8 @@
     "frontend": "cd frontend && yarn start",
     "backend": "nodemon backend/backend.js",
     "dev": "concurrently --kill-others-on-fail \"yarn backend\" \"yarn frontend\""
+  },
+  "dependencies": {
+    "react-router-dom": "^4.2.2"
   }
 }
