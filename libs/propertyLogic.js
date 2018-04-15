@@ -157,6 +157,41 @@ class PropertyLogic {
   }
 
   /**
+   * Start the change of ownership process of a property. This action can be initiated by any account.
+   * @param {string} id The property's unique Id, which is the contract address
+   */
+  makeOffer(propertyId, offererName) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.methods.makeOffer(propertyId, offererName).call({from: fromAddress, gas: 5000000}).then((result) => {
+          resolve(result);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    });
+
+  /**
+   * Complete the process of transferring a property to a new owner.. This action must be initiated by the current property owner.
+   * @param {string} offerId The unique id of an offer on a property.
+   */
+  acceptOffer(offerId) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.methods.acceptOffer(offerId).call({from: fromAddress, gas: 5000000}).then((result) => {
+          resolve(result);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    });
+
+    return promise;
+  }
+
+  /**
    * Tests that we can call the deployed Testing contract and call the sayHello() method
    * @returns {Promise<string>} The string returned from the deployed contract instance.
    */

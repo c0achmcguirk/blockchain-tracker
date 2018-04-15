@@ -24,10 +24,24 @@ app.get('/api/properties/:propertyId', (req, res) => {
 app.get('/api/properties', (req, res) => {
   let lat = req.query.lat;
   let lon = req.query.lon;
-  propertyLogic.getDummyPropertyByCoordinate(lat, lon).then((response) => {
-    res.send({property: response}); 
+  propertyLogic.getPropertyByCoordinate(lat, lon).then((response) => {
+    res.send({ property: response });
   });
+});
 
+app.post('/api/properties/:propertyId/makeOffer', (req, res) => {
+  let propertyId = req.params.propertyId;
+  let offererName = req.query.offerer_name;
+  propertyLogic.makeOffer(propertyId, offererName).then((response) => {
+    res.send({ property: response });
+  });
+});
+
+app.post('/api/offer/:offerId/accept', (req, res) => {
+  let offerId = req.params.offerId;
+  propertyLogic.acceptOffer(propertyId).then((response) => {
+    res.send({ property: response });
+  });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
