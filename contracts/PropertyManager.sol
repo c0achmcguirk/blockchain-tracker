@@ -3,6 +3,7 @@ pragma solidity ^0.4.21;
 contract PropertyManager {
   struct Property {
     address owner;
+    string owner_name;
     int128 left_lat;
     int128 right_lat;
     int128 top_long;
@@ -13,6 +14,7 @@ contract PropertyManager {
 
   struct Offer {
     address offerer;
+    string offerer_name;
     uint256 property_id;
     OfferStatus status;
   }
@@ -23,6 +25,7 @@ contract PropertyManager {
   // -- Actions --
 
   function addProperty(
+    string owner_name,
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
@@ -31,6 +34,7 @@ contract PropertyManager {
     _property_id = properties.length++;
     Property storage p = properties[_property_id];
     p.owner = msg.sender;
+    p.owner_name = owner_name;
     p.left_lat = left_lat;
     p.right_lat = right_lat;
     p.top_long = top_long;
@@ -39,6 +43,7 @@ contract PropertyManager {
     emit PropertyAdded(
       _property_id,
       p.owner,
+      p.owner_name,
       p.left_lat,
       p.right_lat,
       p.top_long,
@@ -48,19 +53,22 @@ contract PropertyManager {
   }
 
   function makeOffer(
-    uint256 property_id
+    uint256 property_id,
+    string offerer_name
   ) public returns (uint256 _offer_id) {
     requireProperty(property_id);
 
     _offer_id = offers.length++;
     Offer storage o = offers[_offer_id];
     o.offerer = msg.sender;
+    o.offerer_name = offerer_name;
     o.property_id = property_id;
     o.status = OfferStatus.Open;
 
     emit OfferMade(
       _offer_id,
       o.offerer,
+      o.offerer_name,
       o.property_id,
       now
     );
@@ -122,6 +130,7 @@ contract PropertyManager {
     uint256 _property_id
   ) public view returns (
     uint256 property_id,
+    string owner_name,
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
@@ -131,7 +140,7 @@ contract PropertyManager {
 
     Property storage p = properties[_property_id];
 
-    return (_property_id, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+    return (_property_id, owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
   }
 
   function getPropertyAt(
@@ -139,6 +148,7 @@ contract PropertyManager {
     int128 long
   ) public view returns (
     uint256 property_id,
+    string owner_name,
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
@@ -149,7 +159,7 @@ contract PropertyManager {
 
       if (p.left_lat < lat && lat < p.right_lat && p.bottom_long < long && long < p.top_long) {
 
-        return (i, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+        return (i, p.owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
       }
     }
   }
@@ -203,6 +213,7 @@ contract PropertyManager {
   event PropertyAdded(
     uint256 indexed property_id,
     address owner,
+    string owner_name,
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
@@ -213,6 +224,7 @@ contract PropertyManager {
   event OfferMade(
     uint256 indexed offer_id,
     address offerer,
+    string offerer_name,
     uint256 indexed property_id,
     uint timestamp
   );
