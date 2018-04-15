@@ -36,8 +36,7 @@ class App extends Component {
       address: hash['address'],
       lat: hash['lat'],
       lon: hash['lon'],
-      placeId: hash['placeId'],
-      zoom: 25
+      placeId: hash['placeId']
     })
   }
 
