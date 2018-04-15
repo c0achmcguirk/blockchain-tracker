@@ -39,9 +39,27 @@ app.post('/api/properties/:propertyId/makeOffer', (req, res) => {
 
 app.post('/api/offer/:offerId/accept', (req, res) => {
   let offerId = req.params.offerId;
-  propertyLogic.acceptOffer(propertyId).then((response) => {
+  propertyLogic.acceptOffer(offerId).then((response) => {
+    console.log('##########')
+    console.log('##########')
+    console.log('##########')
+    console.log(response)
     res.send({ property: response });
   });
 });
+
+app.get('/api/offers/:offerId', (req, res) => {
+  let offerId = req.params.offerId;
+  propertyLogic.getOffer(offerId).then((response) => {
+    res.send({ offer: response })
+  })
+})
+
+app.get('/api/properties/:propertyId/history', (req, res) => {
+  let propertyId = req.params.propertyId;
+  propertyLogic.getPropertyHistory(propertyId).then((response) => {
+    res.send({ property: response });
+  })
+})
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

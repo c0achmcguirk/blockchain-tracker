@@ -28,6 +28,27 @@ class App extends Component {
     return body;
   };
 
+  getPropertyHistory = async (id) => {
+    const response = await fetch(`/api/properties/${id}/history`);
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  }
+
+  getOffer = async (id) => {
+    const response = await fetch(`/api/offers/${id}`);
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  }
+
+  submitTransfer = async (id) => {
+    const response = await fetch(`/api/offer/${id}/accept`, {method: 'POST'});
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,10 +57,17 @@ class App extends Component {
       lon: '',
       name: '',
       view: 'customer',
-      diplayInfo: false
+      diplayInfo: false,
+      history: [],
+      offer: {}
     };
     this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
     this.handleSubmitTransfer = this.handleSubmitTransfer.bind(this);
+    this.handleUpdateAfterTransfer = this.handleUpdateAfterTransfer.bind(this);
+  }
+
+  handleUpdateAfterTransfer(offerer_name, pendingPromt){
+    this.setState({ name: offerer_name, offer: {offerer_name: pendingPromt, price: ''}})
   }
 
   handleSubmitTransfer(transferTo){
@@ -49,13 +77,27 @@ class App extends Component {
   handleUpdateAddress(hash) {
     //this.setState({ address: hash['address'], lat: hash['lat'], lon: hash['lon'] })
     this.getPropertyByLatLong(hash.lat, hash.lon).then(res => {
-      console.log(res)
       this.setState({
         lat: res.property.latitude,
         lon: res.property.longitude,
         name: res.property.owner_name,
         address: res.property.street_address
       });
+
+      this.getPropertyHistory(res.property.property_id).then(res => {
+        this.setState({
+          history: res.property
+        })
+      })
+
+      if(this.state.customer !== 'customer') {
+        this.getOffer(2).then(res => {
+          console.log(res)
+          this.setState({
+            offer: res.offer
+          })
+        })
+      }
     });
   }
 
@@ -67,12 +109,17 @@ class App extends Component {
     if(this.state.address !== ''){
       var displayInfo =
         <InfoCard
+          view={this.state.view}
           address={this.state.address}
           lat={this.state.lat}
           lon={this.state.lon}
           address={this.state.address}
           name={this.state.name}
           onSubmit={this.handleSubmitTransfer}
+          history={this.state.history}
+          offer={this.state.offer}
+          onSubmitTransfer={this.submitTransfer}
+          onUpdateAfterTransfer={this.handleUpdateAfterTransfer}
         />
     }else{
       var displayInfo = <p>Search for a home...</p>

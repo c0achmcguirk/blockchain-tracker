@@ -167,10 +167,11 @@ class PropertyLogic {
         newContractInstance.getPastEvents('OfferAccepted', {fromBlock: 0, filter: {property_id: id}}).then ((result) => {
           let events = result.map(event => {
             let values = event.returnValues;
-            let date = new Date(values.timestamp);
+            console.log(values)
+            let date = new Date(values.timestamp * 1000);
             return {
               price: values.price,
-              owner_name: values.owner_name,
+              owner_name: values.offerer_name,
               date: date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear()
             };
           })
@@ -204,10 +205,29 @@ class PropertyLogic {
   }
 
   /**
+   * Get an offer by id
+   * @param {string} id The offer id to be fetched
+   */
+  getOffer(id) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.methods.getOffer(id).call({from: fromAddress, gas: 500000}).then((result) => {
+          console.log(result)
+          resolve(result);
+        })
+      })
+    })
+
+    return promise;
+  }
+
+  /**
    * Complete the process of transferring a property to a new owner.. This action must be initiated by the current property owner.
    * @param {string} offerId The unique id of an offer on a property.
    */
   acceptOffer(offerId) {
+    console.log(offerId)
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then(function(newContractInstance) {

@@ -24,10 +24,13 @@ class DemoSetup {
               // execute transfer of ownership from Jennifer to Robert
               this._propertyLogic.acceptOffer(1)
               .then((result) => {
-                console.log('######')
-                console.log('Demo successfully initialized!')
-                console.log('######')
-                resolve(result);
+                this._propertyLogic.makeOffer(0, 'Kyle Laughlin', 210000)
+                .then((result) => {
+                  console.log('######')
+                  console.log('Demo successfully initialized!')
+                  console.log('######')
+                  resolve(result);
+                })
               })
             })
           })
