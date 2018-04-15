@@ -1,0 +1,19 @@
+{
+  "name": "HomeLNK-meta-app",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "express" : "^4.16.2",
+    "concurrently": "^3.5"
+  },
+  "scripts": {
+    "fixconfig": "cp -f ../config/*.json config/",
+    "start": "concurrently --kill-others-on-fail \"yarn backend\" \"yarn frontend\"",
+    "build": "cd frontend && react-scripts build",
+    "test": "cd frontend && react-scripts test --env=jsdom",
+    "eject": "cd frontend && react-scripts eject",
+    "frontend": "cd frontend && yarn start",
+    "backend": "nodemon backend/backend.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn backend\" \"yarn frontend\""
+  }
+}
