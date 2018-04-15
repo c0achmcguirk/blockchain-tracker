@@ -49,11 +49,12 @@ class App extends Component {
   handleUpdateAddress(hash) {
     //this.setState({ address: hash['address'], lat: hash['lat'], lon: hash['lon'] })
     this.getPropertyByLatLong(hash.lat, hash.lon).then(res => {
+      console.log(res)
       this.setState({
         lat: res.property.latitude,
         lon: res.property.longitude,
-        name: res.property.name,
-        address: hash.address
+        name: res.property.owner_name,
+        address: res.property.street_address
       });
     });
   }

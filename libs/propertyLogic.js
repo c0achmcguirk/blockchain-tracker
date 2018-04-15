@@ -144,6 +144,7 @@ class PropertyLogic {
       this.getContractInstance()
       .then(function(newContractInstance) {
         newContractInstance.methods.getProperty(id).call({from: fromAddress, gas: 5000000}).then((result) => {
+          console.log(result)
           resolve(result);
         }).catch((err) => {
           console.log(err);
@@ -187,11 +188,11 @@ class PropertyLogic {
    * Start the change of ownership process of a property. This action can be initiated by any account.
    * @param {string} id The property's unique Id, which is the contract address
    */
-  makeOffer(propertyId, offererName) {
+  makeOffer(propertyId, offererName, price) {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then(function(newContractInstance) {
-        newContractInstance.methods.makeOffer(propertyId, offererName).send({from: fromAddress, gas: 5000000}).then((result) => {
+        newContractInstance.methods.makeOffer(propertyId, offererName, price).send({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
         }).catch((err) => {
           console.log(err);

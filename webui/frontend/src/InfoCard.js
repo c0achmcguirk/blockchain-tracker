@@ -41,7 +41,7 @@ class InfoCard extends Component {
     return (
       <div className="blog-card">
       	<div className="description">
-      		<h2>{this.props.address.replace(", USA", "")}</h2>
+      		<h2>{this.props.address}</h2>
           <p>
             <b>{this.props.name}</b><br/>
             {this.props.address}<br/>
