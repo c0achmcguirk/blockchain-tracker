@@ -11,7 +11,11 @@ class InfoCard extends Component {
       <div className="blog-card">
       	<div className="description">
       		<h2>{this.props.address.replace(", USA", "")}</h2>
-      		<p className="summary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+          <ul>
+            <li>Date: 01/01/2017, Transfered From: Don Stantz, To: Ryan Stantz, Purchase Price: $135,000</li>
+            <li>Date: 01/01/2017, Transfered From: Don Stantz, To: Ryan Stantz, Purchase Price: $135,000</li>
+            <li>Date: 01/01/2017, Transfered From: Don Stantz, To: Ryan Stantz, Purchase Price: $135,000</li>
+          </ul>
           <br/>
           <a href="#">Pass Ownership</a>
       	</div>

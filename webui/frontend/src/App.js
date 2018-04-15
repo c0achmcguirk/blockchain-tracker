@@ -44,16 +44,27 @@ class App extends Component {
   render() {
     if(this.state.address !== ''){
       var displayInfo = <InfoCard address={this.state.address} />
+    }else{
+      var displayInfo = <p>Search for a home...</p>
     }
     return (
-      <div className="App">
-        <header className="App-header">
-        </header>
+      <div className="wrapper">
+
         <div className="apiResponse">
           The response from the API call: {this.state.response}
         </div>
-        <div className="App-intro">
+        <div className="nav">
+          <div className="topnav">
+            <a className="active" href="#home">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+          </div>
+        </div>
+        <div className="one">
           <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
+        </div>
+        <div className="two">
           {displayInfo}
         </div>
       </div>
