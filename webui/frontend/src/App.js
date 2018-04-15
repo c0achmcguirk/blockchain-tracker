@@ -35,9 +35,15 @@ class App extends Component {
       lat: '',
       lon: '',
       name: '',
+      view: 'customer',
       diplayInfo: false
     };
     this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
+    this.handleSubmitTransfer = this.handleSubmitTransfer.bind(this);
+  }
+
+  handleSubmitTransfer(transferTo){
+    console.log(`Ah yes...successful transferTo: ${transferTo}`)
   }
 
   handleUpdateAddress(hash) {
@@ -52,6 +58,10 @@ class App extends Component {
     });
   }
 
+  handleTransferOwnership() {
+
+  }
+
   render() {
     if(this.state.address !== ''){
       var displayInfo =
@@ -61,13 +71,41 @@ class App extends Component {
           lon={this.state.lon}
           address={this.state.address}
           name={this.state.name}
+          onSubmit={this.handleSubmitTransfer}
         />
     }else{
       var displayInfo = <p>Search for a home...</p>
     }
+
+    if(this.state.view === 'customer'){
+      const renderView =
+        <div className="wrapper">
+          <div className="apiResponse">
+            The response from the API call: {this.state.response}
+          </div>
+          <div className="nav">
+            <div className="topnav">
+              <a className="active" href="#home">Home</a>
+              <a href="#news">News</a>
+              <a href="#contact">Contact</a>
+              <a href="#about">About</a>
+            </div>
+          </div>
+          <div className="one">
+            <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
+          </div>
+          <div className="two">
+            {displayInfo}
+          </div>
+        </div>
+    }else{
+      const renderView =
+      <h1>Customer View</h1>
+
+    }
+
     return (
       <div className="wrapper">
-
         <div className="apiResponse">
           The response from the API call: {this.state.response}
         </div>
