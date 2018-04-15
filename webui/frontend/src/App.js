@@ -54,7 +54,14 @@ class App extends Component {
 
   render() {
     if(this.state.address !== ''){
-      var displayInfo = <InfoCard address={this.state.address} />
+      var displayInfo =
+        <InfoCard
+          address={this.state.address}
+          lat={this.state.lat}
+          lon={this.state.lon}
+          address={this.state.address}
+          name={this.state.name}
+        />
     }else{
       var displayInfo = <p>Search for a home...</p>
     }
@@ -75,17 +82,8 @@ class App extends Component {
         <div className="one">
           <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
         </div>
-<<<<<<< HEAD
         <div className="two">
           {displayInfo}
-=======
-        <div className="propertyInfo">
-          <p>
-            <b>{this.state.name}</b><br/>
-            {this.state.address}<br/>
-            {this.state.lat},{this.state.lon}
-          </p>
->>>>>>> 32935d8dbaf6bf0e50a9d30f4bda94b09d35c1f0
         </div>
       </div>
     );
