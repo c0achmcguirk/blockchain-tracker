@@ -44,6 +44,14 @@ class App extends Component {
     this.handleToggleView = this.handleToggleView.bind(this);
   }
 
+  handleToggleView(){
+    if(this.state.view === 'customer'){
+      this.setState({ view: 'custome' })
+    }else{
+      this.setState({view: 'customer'})
+    }
+  }
+
   handleSubmitTransfer(transferTo){
     console.log(`Ah yes...successful transferTo: ${transferTo}`)
   }
@@ -94,7 +102,7 @@ class App extends Component {
       <div className="wrapper">
         <div className="nav">
           <div className="topnav">
-            <a className="active" href="#home"><img src={homelnk} width="70" height="20"/></a>
+            <a className="active" href="#home" onClick(this.handleToggleView)><img src={homelnk} width="70" height="20"/></a>
             { renderUser }
           </div>
         </div>
