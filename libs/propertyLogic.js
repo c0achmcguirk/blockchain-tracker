@@ -163,11 +163,12 @@ class PropertyLogic {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then(function(newContractInstance) {
-        newContractInstance.getPastEvents('PropertyAdded', {fromBlock: 0, filter: {property_id: id}}).then ((result) => {
+        newContractInstance.getPastEvents('OfferAccepted', {fromBlock: 0, filter: {property_id: id}}).then ((result) => {
           let events = result.map(event => {
             let values = event.returnValues;
             let date = new Date(values.timestamp);
             return {
+              price: values.price,
               owner_name: values.owner_name,
               date: date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear()
             };
