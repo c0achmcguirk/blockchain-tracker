@@ -8,6 +8,7 @@ contract PropertyManager {
     int128 right_lat;
     int128 top_long;
     int128 bottom_long;
+    string street_address;
   }
 
   enum OfferStatus { Open, Withdrawn, Rejected, Accepted }
@@ -26,6 +27,7 @@ contract PropertyManager {
 
   function addProperty(
     string owner_name,
+    string street_address,
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
@@ -39,6 +41,7 @@ contract PropertyManager {
     p.right_lat = right_lat;
     p.top_long = top_long;
     p.bottom_long = bottom_long;
+    p.street_address = street_address;
 
     emit PropertyAdded(
       _property_id,
@@ -48,6 +51,7 @@ contract PropertyManager {
       p.right_lat,
       p.top_long,
       p.bottom_long,
+      p.street_address,
       now
     );
   }
@@ -135,13 +139,14 @@ contract PropertyManager {
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
-    int128 bottom_long
+    int128 bottom_long,
+    string street_address
   ) {
     requireProperty(_property_id);
 
     Property storage p = properties[_property_id];
 
-    return (_property_id, p.owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+    return (_property_id, p.owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long, p.street_address);
   }
 
   function getPropertyAt(
@@ -153,14 +158,15 @@ contract PropertyManager {
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
-    int128 bottom_long
+    int128 bottom_long,
+    string street_address
   ) {
     for (uint256 i = 0; i < properties.length; i++) {
       Property storage p = properties[i];
 
-      if (p.left_lat < lat && lat < p.right_lat && p.bottom_long < long && long < p.top_long) {
+      if (p.left_lat > lat && lat > p.right_lat && p.bottom_long > long && long > p.top_long) {
 
-        return (i, p.owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+        return (i, p.owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long, p.street_address);
       }
     }
   }
@@ -219,6 +225,7 @@ contract PropertyManager {
     int128 right_lat,
     int128 top_long,
     int128 bottom_long,
+    string street_address,
     uint timestamp
   );
 

@@ -20,13 +20,14 @@ const MapWithASearchBox = compose(
         bounds: null,
         center: { lat: 40.806862, lng: -96.681679 },
         markers: [],
+        zoom: 12,
         onMapMounted: ref => {
           refs.map = ref;
         },
         onBoundsChanged: () => {
           this.setState({
             bounds: refs.map.getBounds(),
-            center: refs.map.getCenter(),
+            //center: refs.map.getCenter(),
           })
         },
         onSearchBoxMounted: ref => {
@@ -36,10 +37,12 @@ const MapWithASearchBox = compose(
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
           const bounds = new google.maps.LatLngBounds();
-
+          let place = places[0];
+          let lat = place.geometry.location.lat();
+          let lng = place.geometry.location.lng();
           this.props.onUpdatePlace({
-            lat: this.state.center.lat(),
-            lon: this.state.center.lng(),
+            lat: lat,
+            lon: lng,
             address: places[0]["formatted_address"]
           })
 
@@ -56,8 +59,25 @@ const MapWithASearchBox = compose(
           this.setState({
             center: nextCenter,
             markers: nextMarkers,
+            zoom: 18
           });
         },
+
+        onClick: (event) => {
+          let lat = event.latLng.lat();
+          let lng = event.latLng.lng();
+          this.props.onUpdatePlace({
+            lat: lat,
+            lon: lng,
+            address: 'fill this in from call'
+          })
+
+          this.setState({
+            center: { lat: lat, lng: lng },
+            markers: [{ position: event.latLng }],
+            zoom: 18
+          });
+        }
       })
     },
   }),
@@ -66,7 +86,7 @@ const MapWithASearchBox = compose(
 )(props =>
   <GoogleMap
     ref={props.onMapMounted}
-    defaultZoom={19}
+    zoom={props.zoom}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
     onClick={props.onClick}

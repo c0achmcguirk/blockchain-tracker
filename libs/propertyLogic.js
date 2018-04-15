@@ -74,7 +74,7 @@ class PropertyLogic {
    * @param {string} name The name of the property for displaying on a UI.
    * @returns {Property} The updated property.
    */
-  saveProperty(owner_name, topLeft, bottomRight) {
+  saveProperty(owner_name, topLeft, bottomRight, street_address) {
     //no-op
     let leftLat = topLeft.latitude * fixnumFactor;
     let topLong = topLeft.longitude * fixnumFactor;
@@ -84,7 +84,7 @@ class PropertyLogic {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then((newContractInstance) => {
-        newContractInstance.methods.addProperty(owner_name, leftLat, rightLat, topLong, bottomLong)
+        newContractInstance.methods.addProperty(owner_name, street_address, leftLat, rightLat, topLong, bottomLong)
         .send({from: fromAddress, gas: 500000}).then((result) => {
           // In the event we need the return property values here is a way to get them via the event.
           // Don't forget to modify the lat longs from their fixnum with the fixnumFactor

@@ -80,15 +80,9 @@ class App extends Component {
     if(this.state.view === 'customer'){
       const renderView =
         <div className="wrapper">
-          <div className="apiResponse">
-            The response from the API call: {this.state.response}
-          </div>
           <div className="nav">
             <div className="topnav">
-              <a className="active" href="#home">Home</a>
-              <a href="#news">News</a>
-              <a href="#contact">Contact</a>
-              <a href="#about">About</a>
+              <a className="active" href="#home">HomeLnk</a>
             </div>
           </div>
           <div className="one">
@@ -106,15 +100,9 @@ class App extends Component {
 
     return (
       <div className="wrapper">
-        <div className="apiResponse">
-          The response from the API call: {this.state.response}
-        </div>
         <div className="nav">
           <div className="topnav">
-            <a className="active" href="#home">Home</a>
-            <a href="#news">News</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
+            <a className="active" href="#home">HomeLnk</a>
           </div>
         </div>
         <div className="one">
