@@ -18,6 +18,8 @@ var contractAbi      = config.get('TestContract.abi');
 var fromAddress      = config.get('fromAddress');
 var fixnumFactor     = config.get('fixnumFactor');
 
+var deployedAddress = '0xF15AF929e804ca1de5dc11C423911E8482Cee99B';
+
 class PropertyLogic {
 
   /**
@@ -43,15 +45,21 @@ class PropertyLogic {
         resolve(this._contractInstance);
       } else {
         let contract = new web3.eth.Contract(contractAbi);
-        contract.deploy({data: contractBin})
-        .send({
-          from     : fromAddress,
-          gas      : 1500000,
-          gasPrice : '30000000000000'
-        }).then((instance) => {
-          this._contractInstance = instance;
-          resolve(instance);
-        });
+        if(deployedAddress) {
+          contract.options.address = deployedAddress;
+          this._contractInstance = contract;
+          resolve(contract);
+        } else {
+          contract.deploy({data: contractBin})
+          .send({
+            from     : fromAddress,
+            gas      : 1500000,
+            gasPrice : '300'
+          }).then((instance) => {
+            this._contractInstance = instance;
+            resolve(instance);
+          });
+        }
       }
     });
   }
@@ -61,12 +69,32 @@ class PropertyLogic {
    * are updating an existing property.
    * @param {string} id The ID of the property. If the property doesn't have an id, leave this as
    *   null or undefined.
-   * @param {Object[]} coordinates The GPS coordinates of the property. Only support 4 points now.
+   * @param {Object} topLeft The top left GPS coordinates of the property. { latitude: 40.23443, longitude: -96.2343 }
+   * @param {Object} bottomRight The bottom right GPS coordinates of the property. { latitude: 40.244l3, longitude: -96.1232 }
    * @param {string} name The name of the property for displaying on a UI.
    * @returns {Property} The updated property.
    */
-  saveProperty(id, coordinates, name) {
+  saveProperty(topLeft, bottomRight, name) {
     //no-op
+    let leftLat = topLeft.latitude * fixnumFactor;
+    let topLong = topLeft.longitude * fixnumFactor;
+    let rightLat = bottomRight.latitude * fixnumFactor;
+    let bottomLong = bottomRight.longitude * fixnumFactor;
+
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then((newContractInstance) => {
+        newContractInstance.methods.addProperty(leftLat, rightLat, topLong, bottomLong)
+        .send({from: fromAddress, gas: 500000}).then((result) => {
+          // In the event we need the return property values here is a way to get them via the event.
+          // Don't forget to modify the lat longs from their fixnum with the fixnumFactor
+          // result.events.PropertyAdded.returnValues
+          resolve(result);
+        })
+      })
+    })
+
+    return promise;
   }
 
   /**
@@ -76,10 +104,13 @@ class PropertyLogic {
    *   a property belonging to that point.
    */
   getPropertyByCoordinate(latitude, longitude) {
+    let latitudeFixnum = latitude * fixnumFactor;
+    let longitudeFixnum = longitude * fixnumFactor;
+
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then((newContractInstance) => {
-        newContractInstance.methods.getPropertyAt(latitude, longitude).call({from: fromAddress, gas: 500000}).then((result) => {
+        newContractInstance.methods.getPropertyAt(latitudeFixnum, longitudeFixnum).call({from: fromAddress, gas: 500000}).then((result) => {
           resolve(result);
         });
       });
@@ -97,8 +128,10 @@ class PropertyLogic {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then(function(newContractInstance) {
-        newContractInstance.methods.getPropertyById(id).call({from: fromAddress, gas: 5000000}).then((result) => {
+        newContractInstance.methods.getProperty(id).call({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
+        }).catch((err) => {
+          console.log(err);
         });
       });
     });
