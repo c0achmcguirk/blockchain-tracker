@@ -155,9 +155,6 @@ body {
 }
 
 @media screen and (min-width: 600px) {
-  .blog-card {
-    max-width: 600px;
-  }
   .blog-card.alt .details {
     padding-left: 30px;
   }
@@ -178,6 +175,7 @@ body {
     height: 100%;
     width: 40%;
   }
+
   .blog-card .details {
     width: 40%;
   }
