@@ -18,7 +18,7 @@ var contractAbi      = config.get('TestContract.abi');
 var fromAddress      = config.get('fromAddress');
 var fixnumFactor     = config.get('fixnumFactor');
 
-var deployedAddress = '0xF15AF929e804ca1de5dc11C423911E8482Cee99B';
+var deployedAddress = '0xf15af929e804ca1de5dc11c423911e8482cee99b';
 
 class PropertyLogic {
 
@@ -50,6 +50,7 @@ class PropertyLogic {
           this._contractInstance = contract;
           resolve(contract);
         } else {
+          console.log('shouldnt see')
           contract.deploy({data: contractBin})
           .send({
             from     : fromAddress,
@@ -121,7 +122,7 @@ class PropertyLogic {
 
 	/**
    * Look up a property by the id (address) on the blockchain, returning it.
-   * @param {string} id The property's unique Id, which is the contract address
+   * @param {string} id The property's unique Id.
    * @returns {Promise<Property>} The property belong to that id, or undefined if we don't have it.
    */
 	getPropertyById(id) {
@@ -138,6 +139,35 @@ class PropertyLogic {
 
     return promise;
   }
+
+  /**
+   * Get a list of property owners
+   * @param {string} id The property's unique Id, which is the index of the property in the contract.
+   * @returns {Object[]} The list of historical owners
+  */
+  getPropertyHistory(id) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.getPastEvents('PropertyAdded', {fromBlock: 0, filter: {property_id: id}}).then ((result) => {
+          let events = result.map(event => {
+            let values = event.returnValues;
+            let date = new Date(values.timestamp);
+            return {
+              owner_name: values.owner_name,
+              date: date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear()
+            };
+          })
+          resolve(events);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    });
+
+    return promise;
+  }
+
 
   /**
    * Tests that we can call the deployed Testing contract and call the sayHello() method

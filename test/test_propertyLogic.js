@@ -99,7 +99,11 @@ describe("PropertyLogic", () => {
         let bottomRight = { latitude: '40.814239', longitude: '-96.710925' }
         let name = 'Creamery Building'
 
-        return propertyLogic.saveProperty(topLeft, bottomRight, name).then((result) => {})
+        return propertyLogic.saveProperty(topLeft, bottomRight, name).then((result) => {
+          propertyLogic.getPropertyHistory(2).then((result) => {
+            console.log(result);
+          })
+        })
       })
     })
 
