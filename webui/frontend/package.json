@@ -1,11 +1,16 @@
 {
-  "name": "frontend",
+  "name": "HomeLNK-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
+    "google-map-react": "^0.34.0",
+    "google-maps-react": "^2.0.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
-    "react-scripts": "1.1.4"
+    "react-google-maps": "^9.4.5",
+    "react-scripts": "1.1.4",
+    "react-streetview": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

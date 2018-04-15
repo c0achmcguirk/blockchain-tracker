@@ -10,6 +10,7 @@
 
 const config = require('config');
 const Web3 = require('web3');
+const Property = require('./property');
 var web3;
 
 var blockchainConfig = config.get('Blockchain');
@@ -50,7 +51,6 @@ class PropertyLogic {
           this._contractInstance = contract;
           resolve(contract);
         } else {
-          console.log('shouldnt see')
           contract.deploy({data: contractBin})
           .send({
             from     : fromAddress,
@@ -94,6 +94,21 @@ class PropertyLogic {
         })
       })
     })
+
+    return promise;
+  }
+
+  /**
+   * Returns test information
+   * @param {Coordinate} coordinate The GPS coordinates of a point on the map.
+   * @returns {Property} A test property for use in testing the UI
+   */
+  getDummyPropertyByCoordinate(latitude, longitude) {
+    let promise = new Promise((resolve, reject) => {
+      let property = new Property({latitude: latitude, longitude: longitude,
+        name: `Property at ${ latitude }, ${longitude}`});
+      resolve(property);
+    });
 
     return promise;
   }
@@ -168,6 +183,44 @@ class PropertyLogic {
     return promise;
   }
 
+  /**
+   * Start the change of ownership process of a property. This action can be initiated by any account.
+   * @param {string} id The property's unique Id, which is the contract address
+   */
+  makeOffer(propertyId, offererName) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.methods.makeOffer(propertyId, offererName).call({from: fromAddress, gas: 5000000}).then((result) => {
+          resolve(result);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    });
+
+    return promise;
+  }
+
+  /**
+   * Complete the process of transferring a property to a new owner.. This action must be initiated by the current property owner.
+   * @param {string} offerId The unique id of an offer on a property.
+   */
+  acceptOffer(offerId) {
+    let promise = new Promise((resolve, reject) => {
+      this.getContractInstance()
+      .then(function(newContractInstance) {
+        newContractInstance.methods.acceptOffer(offerId).call({from: fromAddress, gas: 5000000}).then((result) => {
+          resolve(result);
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    });
+
+    return promise;
+  }
 
   /**
    * Tests that we can call the deployed Testing contract and call the sayHello() method
