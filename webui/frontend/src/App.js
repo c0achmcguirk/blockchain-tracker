@@ -97,6 +97,15 @@ class App extends Component {
       <h1>Customer View</h1>
 
     }
+    console.log(this.state.view)
+    if(this.state.view === 'customer'){
+      var mapLayout = 'three'
+      var infoLayout = 'four'
+    } else {
+      var mapLayout = 'one'
+      var infoLayout = 'two'
+    }
+
 
     return (
       <div className="wrapper">
@@ -105,10 +114,10 @@ class App extends Component {
             <a className="active" href="#home">HomeLnk</a>
           </div>
         </div>
-        <div className="one">
+        <div className={mapLayout}>
           <MapWithASearchBox onUpdatePlace={this.handleUpdateAddress}/>
         </div>
-        <div className="two">
+        <div className={infoLayout}>
           {displayInfo}
         </div>
       </div>
