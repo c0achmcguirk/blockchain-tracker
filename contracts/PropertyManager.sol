@@ -15,6 +15,7 @@ contract PropertyManager {
   struct Offer {
     address offerer;
     string offerer_name;
+    uint256 price;
     uint256 property_id;
     OfferStatus status;
   }
@@ -54,7 +55,8 @@ contract PropertyManager {
 
   function makeOffer(
     uint256 property_id,
-    string offerer_name
+    string offerer_name,
+    uint256 price
   ) public returns (uint256 _offer_id) {
     requireProperty(property_id);
 
@@ -62,6 +64,7 @@ contract PropertyManager {
     Offer storage o = offers[_offer_id];
     o.offerer = msg.sender;
     o.offerer_name = offerer_name;
+    o.price = price;
     o.property_id = property_id;
     o.status = OfferStatus.Open;
 
@@ -69,6 +72,7 @@ contract PropertyManager {
       _offer_id,
       o.offerer,
       o.offerer_name,
+      o.price,
       o.property_id,
       now
     );
@@ -105,6 +109,8 @@ contract PropertyManager {
     emit OfferAccepted(
       offer_id,
       o.property_id,
+      o.offerer_name,
+      o.price,
       now
     );
   }
@@ -227,12 +233,15 @@ contract PropertyManager {
     address offerer,
     string offerer_name,
     uint256 indexed property_id,
+    uint256 price,
     uint timestamp
   );
 
   event OfferAccepted(
     uint256 indexed offer_id,
     uint256 indexed property_id,
+    string offerer_name,
+    uint256 price,
     uint timestamp
   );
 
