@@ -1,6 +1,9 @@
 .App {
   text-align: center;
 }
+.pull-right{
+  float: right !important;
+}
 .wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -221,6 +224,6 @@ body {
 
 /* Add a color to the active/current link */
 .topnav a.active {
-    background-color: #4CAF50;
+    background-color: white;
     color: white;
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MapWithASearchBox from './MapWithASearchBox';
 import InfoCard from './InfoCard';
+import homelnk from './homelnk.png'
 
 class App extends Component {
 
@@ -40,6 +41,7 @@ class App extends Component {
     };
     this.handleUpdateAddress = this.handleUpdateAddress.bind(this);
     this.handleSubmitTransfer = this.handleSubmitTransfer.bind(this);
+    this.handleToggleView = this.handleToggleView.bind(this);
   }
 
   handleSubmitTransfer(transferTo){
@@ -81,16 +83,19 @@ class App extends Component {
     if(this.state.view === 'customer'){
       var mapLayout = 'three'
       var infoLayout = 'four'
+      var renderUser = <a className="pull-right" href="#home"><i className="fa fa-user"></i> Kyle Laughlin </a>
     } else {
       var mapLayout = 'one'
       var infoLayout = 'two'
+      var renderUser = <a className="pull-right" href="#home"><i className="fa fa-user"></i> Modern Title Company Employee</a>
     }
 
     return (
       <div className="wrapper">
         <div className="nav">
           <div className="topnav">
-            <a className="active" href="#home">HomeLnk</a>
+            <a className="active" href="#home"><img src={homelnk} width="70" height="20"/></a>
+            { renderUser }
           </div>
         </div>
         <div className={mapLayout}>
