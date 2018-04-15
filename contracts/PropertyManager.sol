@@ -36,7 +36,15 @@ contract PropertyManager {
     p.top_long = top_long;
     p.bottom_long = bottom_long;
 
-    emit PropertyAdded(_property_id, p.owner, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+    emit PropertyAdded(
+      _property_id,
+      p.owner,
+      p.left_lat,
+      p.right_lat,
+      p.top_long,
+      p.bottom_long,
+      now
+    );
   }
 
   function makeOffer(
@@ -50,7 +58,12 @@ contract PropertyManager {
     o.property_id = property_id;
     o.status = OfferStatus.Open;
 
-    emit OfferMade(_offer_id, o.offerer, o.property_id);
+    emit OfferMade(
+      _offer_id,
+      o.offerer,
+      o.property_id,
+      now
+    );
   }
 
   function withdrawOffer(
@@ -61,7 +74,11 @@ contract PropertyManager {
 
     o.status = OfferStatus.Withdrawn;
 
-    emit OfferWithdrawn(offer_id, o.property_id);
+    emit OfferWithdrawn(
+      offer_id,
+      o.property_id,
+      now
+    );
   }
 
   function acceptOffer(
@@ -76,7 +93,11 @@ contract PropertyManager {
     p.owner = o.offerer;
     o.status = OfferStatus.Accepted;
 
-    emit OfferAccepted(offer_id, o.property_id);
+    emit OfferAccepted(
+      offer_id,
+      o.property_id,
+      now
+    );
   }
 
   function rejectOffer(
@@ -90,7 +111,11 @@ contract PropertyManager {
 
     o.status = OfferStatus.Rejected;
 
-    emit OfferRejected(offer_id, o.property_id);
+    emit OfferRejected(
+      offer_id,
+      o.property_id,
+      now
+    );
   }
 
   function getProperty(
@@ -181,27 +206,32 @@ contract PropertyManager {
     int128 left_lat,
     int128 right_lat,
     int128 top_long,
-    int128 bottom_long
+    int128 bottom_long,
+    uint timestamp
   );
 
   event OfferMade(
     uint256 indexed offer_id,
     address offerer,
-    uint256 indexed property_id
+    uint256 indexed property_id,
+    uint timestamp
   );
 
   event OfferAccepted(
     uint256 indexed offer_id,
-    uint256 indexed property_id
+    uint256 indexed property_id,
+    uint timestamp
   );
 
   event OfferWithdrawn(
     uint256 indexed offer_id,
-    uint256 indexed property_id
+    uint256 indexed property_id,
+    uint timestamp
   );
 
   event OfferRejected(
     uint256 indexed offer_id,
-    uint256 indexed property_id
+    uint256 indexed property_id,
+    uint timestamp
   );
 }
