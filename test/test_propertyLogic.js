@@ -3,6 +3,7 @@ const PropertyLogic = require("../libs/propertyLogic");
 
 describe("PropertyLogic", () => {
 
+  /* @type {Object} Mock object for simulating calls to the contract. */
   var mockContract = {
     methods: {
       getPropertyById() {

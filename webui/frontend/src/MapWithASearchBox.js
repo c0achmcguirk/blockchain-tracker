@@ -40,8 +40,7 @@ const MapWithASearchBox = compose(
           this.props.onUpdatePlace({
             lat: this.state.center.lat(),
             lon: this.state.center.lng(),
-            address: places[0]["formatted_address"],
-            placeId: places[0]["place_id"]
+            address: places[0]["formatted_address"]
           })
 
           places.forEach(place => {

@@ -7,11 +7,11 @@
     "concurrently": "^3.5"
   },
   "scripts": {
+    "fixconfig": "cp -f ../config/*.json config/",
     "start": "concurrently --kill-others-on-fail \"yarn backend\" \"yarn frontend\"",
     "build": "cd frontend && react-scripts build",
     "test": "cd frontend && react-scripts test --env=jsdom",
     "eject": "cd frontend && react-scripts eject",
-    "client": "cd frontend && yarn start",
     "frontend": "cd frontend && yarn start",
     "backend": "nodemon backend/backend.js",
     "dev": "concurrently --kill-others-on-fail \"yarn backend\" \"yarn frontend\""
