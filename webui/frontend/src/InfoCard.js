@@ -7,9 +7,10 @@ class InfoCard extends Component {
     this.state = {
       renderForm: false,
       transferTo: '',
+      buttonState: 'enabled',
       saved: false
     };
-    this.handleChangeRenderForm = this.handleChangeRenderForm.bind(this);
+    this.submitPassOwnership = this.submitPassOwnership.bind(this);
     this.handleTransferTo = this.handleTransferTo.bind(this);
     this.handleUpdateSave = this.handleUpdateSave.bind(this);
   }
@@ -30,9 +31,15 @@ class InfoCard extends Component {
     this.setState({ transferTo: event.target.value })
   }
 
-  handleChangeRenderForm(event) {
+  submitPassOwnership(event) {
     event.preventDefault();
-    this.setState({ renderForm: !this.state.renderForm })
+    // this.setState({ renderForm: !this.state.renderForm })
+    this.props.onSubmitTransfer(2).then(res => {
+      // this.props.name = this.props.offer.offerer_name
+      // this.props.offer = { offerer_name: 'No pending offers' };
+      this.props.onUpdateAfterTransfer(this.props.offer.offerer_name, 'No pending offers')
+      this.setState({ buttonState: 'disabled'});
+    })
   }
 
   render() {
@@ -46,30 +53,58 @@ class InfoCard extends Component {
         </form>
     }
 
-    if(this.props.view === 'customer'){
-      if(this.state.saved){
-        var renderAction = <a href="#" onClick={this.handleUpdateSave}>You already saved this home!</a>
-      }else{
-        var renderAction = <a href="#" onClick={this.handleUpdateSave}>Save This Home</a>
-      }
-    }else{
-      var renderAction = <a href="#" onClick={this.handleChangeRenderForm}>Pass Ownership</a>
+    var historyOrOffer;
+    var header;
+    var dollar = this.props.offer.price !== '' ? '$' : '';
+    if(this.props.view === 'customer') {
+      header = (<div className="history-header">Property History</div>)
+      historyOrOffer = this.props.history.map((event, index) => {
+        return (<div key={index}>
+          <p>{event.date} {event.owner_name} ${event.price}</p>
+        </div>)
+      });
+    } else {
+      header = (<div className="history-header">Pending Transfer</div>)
+      historyOrOffer = (<div>
+        <p>{this.props.offer.offerer_name} {dollar}{this.props.offer.price}</p>
+      </div>)
     }
-    
+
+    const buttonStyle = {
+      backgroundColor: '#50ae54',
+      padding: '8px',
+      color: '#fff',
+      textDecoration: 'none'
+    }
+
+    var button;
+    var renderAction;
+    if(this.props.view === 'customer') {
+      if(this.state.saved){
+        renderAction = <a href="#" onClick={this.handleUpdateSave}>You already saved this home!</a>
+      }else{
+        renderAction = <a href="#" onClick={this.handleUpdateSave}>Save This Home</a>
+      }
+    } else {
+      if(this.state.buttonState === 'enabled') {
+        renderAction = (<a href="#" onClick={this.submitPassOwnership} style={buttonStyle}>Transfer Ownership</a>);
+      } else {
+        renderAction = (<a href="#" onClick={this.submitPassOwnership} style={buttonStyle} disabled>Transfer Ownership</a>);
+      }
+    }
+
     return (
       <div className="blog-card">
       	<div className="description">
-      		<h2>{this.props.address.replace(", USA", "")}</h2>
+      		<h2 className="property-header">{this.props.address}</h2>
           <p>
             <b>{this.props.name}</b><br/>
             {this.props.address}<br/>
-            {this.props.lat},{this.props.lon}
           </p>
-          <ul>
-            <li>Date: 01/01/2017, Transfered To: Ryan Stantz, Purchase Price: $135,000</li>
-            <li>Date: 01/01/2017, Transfered To: Ryan Stantz, Purchase Price: $135,000</li>
-            <li>Date: 01/01/2017, Transfered To: Ryan Stantz, Purchase Price: $135,000</li>
-          </ul>
+          <div className="property-history">
+            { header}
+            { historyOrOffer }
+          </div>
           <br/>
           {form}
           {renderAction}

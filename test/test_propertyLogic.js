@@ -117,8 +117,8 @@ describe("PropertyLogic", () => {
       });
 
       it("should return a property if property is found", () => {
-        propertyLogic._contractInstance = mockContract;
-        let propertyId = "123abc";
+        //propertyLogic._contractInstance = mockContract;
+        let propertyId = 0;
         return propertyLogic.getPropertyById(propertyId).then((result) => {
           assert.strictEqual("123abc", result.id);
           assert.strictEqual("Creamery Building", result.name);

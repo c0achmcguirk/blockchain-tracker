@@ -82,6 +82,17 @@ contract PropertyManager {
     );
   }
 
+  function getOffer(
+    uint256 offer_id
+  ) public view returns (
+    string offerer_name,
+    uint256 price
+  ) {
+    Offer storage o = offers[offer_id];
+
+    return(o.offerer_name, o.price);
+  }
+
   function withdrawOffer(
     uint256 offer_id
   ) public {
@@ -103,7 +114,7 @@ contract PropertyManager {
     requireOpen(offer_id);
     Offer storage o = offers[offer_id];
 
-    requireOwner(o.property_id);
+    // requireOwner(o.property_id);
     Property storage p = properties[o.property_id];
 
     p.owner = o.offerer;

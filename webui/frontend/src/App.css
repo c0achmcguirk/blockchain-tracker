@@ -131,6 +131,7 @@ body {
   font-size: 1em;
   font-weight: 400;
   margin: 1.2% 0;
+  margin-bottom: 8px;
 }
 .blog-card .description p {
   position: relative;
@@ -198,6 +199,14 @@ body {
     position:relative;
 
   }
+
+  .blog-card .description .property-history {
+    margin-top: 10px
+  }
+
+  .blog-card .description .property-history .history-header {
+    font-size: 14px;
+  }
 }
 
 /* Add a black background color to the top navigation */
@@ -226,4 +235,8 @@ body {
 .topnav a.active {
     background-color: white;
     color: white;
+}
+
+.blog-card, .description, h2.property-header {
+  margin-bottom: 5px;
 }
