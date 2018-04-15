@@ -18,8 +18,7 @@ var contractBin      = config.get('TestContract.bin');
 var contractAbi      = config.get('TestContract.abi');
 var fromAddress      = config.get('fromAddress');
 var fixnumFactor     = config.get('fixnumFactor');
-
-var deployedAddress = '0xf15af929e804ca1de5dc11c423911e8482cee99b';
+var contractAddress  = config.get('contractAddress');
 
 class PropertyLogic {
 
@@ -46,8 +45,8 @@ class PropertyLogic {
         resolve(this._contractInstance);
       } else {
         let contract = new web3.eth.Contract(contractAbi);
-        if(deployedAddress) {
-          contract.options.address = deployedAddress;
+        if(contractAddress) {
+          contract.options.address = contractAddress;
           this._contractInstance = contract;
           resolve(contract);
         } else {
@@ -75,7 +74,7 @@ class PropertyLogic {
    * @param {string} name The name of the property for displaying on a UI.
    * @returns {Property} The updated property.
    */
-  saveProperty(topLeft, bottomRight, name) {
+  saveProperty(owner_name, topLeft, bottomRight) {
     //no-op
     let leftLat = topLeft.latitude * fixnumFactor;
     let topLong = topLeft.longitude * fixnumFactor;
@@ -85,7 +84,7 @@ class PropertyLogic {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then((newContractInstance) => {
-        newContractInstance.methods.addProperty(leftLat, rightLat, topLong, bottomLong)
+        newContractInstance.methods.addProperty(owner_name, leftLat, rightLat, topLong, bottomLong)
         .send({from: fromAddress, gas: 500000}).then((result) => {
           // In the event we need the return property values here is a way to get them via the event.
           // Don't forget to modify the lat longs from their fixnum with the fixnumFactor
@@ -191,7 +190,7 @@ class PropertyLogic {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then(function(newContractInstance) {
-        newContractInstance.methods.makeOffer(propertyId, offererName).call({from: fromAddress, gas: 5000000}).then((result) => {
+        newContractInstance.methods.makeOffer(propertyId, offererName).send({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
         }).catch((err) => {
           console.log(err);
@@ -210,7 +209,7 @@ class PropertyLogic {
     let promise = new Promise((resolve, reject) => {
       this.getContractInstance()
       .then(function(newContractInstance) {
-        newContractInstance.methods.acceptOffer(offerId).call({from: fromAddress, gas: 5000000}).then((result) => {
+        newContractInstance.methods.acceptOffer(offerId).send({from: fromAddress, gas: 5000000}).then((result) => {
           resolve(result);
 
         }).catch((err) => {

@@ -99,6 +99,7 @@ contract PropertyManager {
     Property storage p = properties[o.property_id];
 
     p.owner = o.offerer;
+    p.owner_name = o.offerer_name;
     o.status = OfferStatus.Accepted;
 
     emit OfferAccepted(
@@ -140,7 +141,7 @@ contract PropertyManager {
 
     Property storage p = properties[_property_id];
 
-    return (_property_id, owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
+    return (_property_id, p.owner_name, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
   }
 
   function getPropertyAt(

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "express" : "^4.16.2",
+    "express": "^4.16.2",
     "concurrently": "^3.5"
   },
   "scripts": {
