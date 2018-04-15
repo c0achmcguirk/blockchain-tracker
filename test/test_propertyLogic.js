@@ -40,6 +40,24 @@ describe("PropertyLogic", () => {
           }
         };
       },
+      getProperty() {
+        return {
+          call() {
+            return new Promise((resolve, reject) => {
+              resolve({
+                id: '123abc',
+                name: 'Creamery Building',
+                owner: 'Real Building, LLC',
+                address: '701 P St, Lincoln, NE 68502',
+                top_long: '40.814649',
+                left_lat: '-96.711242',
+                bottom_long: '40.814239',
+                right_lat: '-96.710925',
+              })
+            })
+          }
+        }
+      },
       sayHello() {
         return {
           call() {
@@ -74,6 +92,17 @@ describe("PropertyLogic", () => {
     var someVal = "foo";
 		var propertyLogic = new PropertyLogic;
 
+    xdescribe('#saveProperty', () => {
+      // helper to create a save for manual testing
+      it("should return the created property", () => {
+        let topLeft = { latitude: '40.814649', longitude: '-96.711242' }
+        let bottomRight = { latitude: '40.814239', longitude: '-96.710925' }
+        let name = 'Creamery Building'
+
+        return propertyLogic.saveProperty(topLeft, bottomRight, name).then((result) => {})
+      })
+    })
+
     describe('#getPropertyById', () => {
       xit("should return undefined if property id doesn't exist", () => {
         let propertyId = 'bogusID';
@@ -101,8 +130,8 @@ describe("PropertyLogic", () => {
     describe('#getPropertyByCoordinate', () => {
       it("should return a property if property is found", () => {
         propertyLogic._contractInstance = mockContract;
-        let lat = '40.814551';
-        let long = '-96.709717';
+        let lat = '40.814351';
+        let long = '-96.709517';
         return propertyLogic.getPropertyByCoordinate(lat, long).then((result) => {
           assert.strictEqual("789xyz", result.id);
         })

@@ -147,7 +147,7 @@ contract PropertyManager {
     for (uint256 i = 0; i < properties.length; i++) {
       Property storage p = properties[i];
 
-      if (left_lat < lat && lat < right_lat && bottom_long < long && long < top_long) {
+      if (p.left_lat < lat && lat < p.right_lat && p.bottom_long < long && long < p.top_long) {
 
         return (i, p.left_lat, p.right_lat, p.top_long, p.bottom_long);
       }
