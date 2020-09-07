@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "concurrently": "^3.5",
-    "express": "^4.16.2"
+    "concurrently": "^5.3",
+    "express": "^4.17.1"
   },
   "scripts": {
     "fixconfig": "cp -f ../config/*.json config/",

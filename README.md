@@ -37,7 +37,8 @@ We didn't spend a lot of time making this streamlined, so we have some TODOs to 
     npm install && yarn install
     ```
 
-6. Open Ganache.
+6. Open [Ganache](https://www.trufflesuite.com/ganache). Start up a workspace,
+   if there isn't any running yet.
 
 7. Migrate the contracts to the local Ganache blockchain.
     ```c
