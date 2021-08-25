@@ -10,7 +10,8 @@ company industry.
 We didn't spend a lot of time making this streamlined, so we have some TODOs to make this easier.
 🤓. Here is how you can get it running today.
 
-1. Install [truffle](https://github.com/trufflesuite/truffle), which also will install [ganache]().
+1. Install [truffle](https://github.com/trufflesuite/truffle), which also will
+install [ganache](https://www.trufflesuite.com/ganache).
 
 2. Install some global node packages, assuming you have `npm` and `node` installed.
     ```c
