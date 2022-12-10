@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "concurrently": "^5.3",
-    "express": "^4.17.1"
+    "express": "^4.17.3"
   },
   "scripts": {
     "fixconfig": "cp -f ../config/*.json config/",
